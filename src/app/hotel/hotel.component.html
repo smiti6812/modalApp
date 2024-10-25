@@ -1,75 +1,91 @@
 
 <div *ngIf="showModal" class="booking-modal">
+
   <div  *ngIf="selected.length > 0" class="booking-modal-content">
-    <span (click) = "closeModal()" class="booking-close">&times;</span>
-    <!--<app-reservationform></app-reservationform>-->
-      <p>
-        {{selected | json}}
-      </p>
-      <p>
-        {{ reservations | json }}
-      </p>
-  </div>
-</div>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-2">
-      <div class="row">
-         <div class="col" style="font-weight: bold; font-size: 18px;">
-              Available Rooms:
-         </div>
+    <div class="booking-modal-header">
+      Save your booking
+      <span (click) = "closeModal()" class="booking-close">&times;</span>
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Room</th>
-            <th>Beds</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for(row of reservationView; track $index)
-          {
-          <tr>
-              <td>{{row.room.roomNumber}}</td>
-              <td>{{row.room.roomCapacity.capacity}}</td>
-              <td>{{row.room.status}}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+    <app-reservationform (cancelReservationForm) = "cancelForm($event)" (submitReservationForm) ="getReservationForm($event)"  [reservationForm] = "reservationForm"></app-reservationform>
+    <div class="booking-modal-footer">
     </div>
+  </div>
 
-    <div class="col-10"  style="overflow-x:scroll;">
-      <div class="row">
-          <div  style="width:100%;display:flex;justify-content: center;font-weight: bold; font-size: 18px;">
-            <span (click)="goToPreviousMonth()" style="margin-right:5px;font-weight: bold;">&#171;</span><div> {{pageSelectedDate.monthShort + ' '+ pageSelectedDate.year}}</div><span (click)="goToNextMonth()" style="margin-left: 5px;font-weight: bold;">&#187;</span>
+</div>
+    <div style="overflow-x:auto;">
 
-          </div>
-      </div>
       <table class="table table-stripped table-bordered">
         <thead>
           <tr>
-            <th class="col booking-item-header"  *ngFor="let item of daysInMonthArr">
-              {{ item.weekDay }}{{ item.name }}
+            <th colspan="3" style="position:sticky;left:0;">
+              <div style="display:flex;justify-content:center;margin:0 auto;font-weight: bold; font-size: 18px;">
+                Available Rooms:
+              </div>
+              <div>
+                <input class="form-control" style="max-width: 400px;"  type="text" [(ngModel)]="searchText"  placeholder="Search.." >
+              </div>
+            </th>
+            <th [attr.colspan]="days" *ngFor="let days of reservationMonths;let i = index">
+              <div  style="width:100%;display:flex;justify-content: center;font-weight: bold; font-size: 18px;">
+                <span (click)="goToPreviousMonth()" style="margin-right:5px;font-weight: bold;">&#171;</span><div> {{pageSelectedDate.plus({month:i}).monthShort + ' '+ pageSelectedDate.plus({month:i}).year}}</div><span (click)="goToNextMonth()" style="margin-left: 5px;font-weight: bold;">&#187;</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <thead style="width:10%;">
+          <tr>
+            <th style="position:sticky;min-width:120px;left:0px;">
+                Room
+                <i appSortParams (param)="setSortParams($event)" class="fa fa-arrow-up" id="roomAsc"></i>
+                <i appSortParams (param)="setSortParams($event)" class="fa fa-arrow-down" id="roomDesc"></i>
+            </th>
+            <th>
+              Beds
+                <i appSortParams (param)="setSortParams($event)" class="fa fa-arrow-up" id="bedsAsc"></i>
+                <i appSortParams (param)="setSortParams($event)" class="fa fa-arrow-down" id="bedsDesc"></i>
+            </th>
+            <th>
+              <div class="colSpan">
+                  Status
+
+            </div>
+            </th>
+            <th class="booking-item-header"  *ngFor="let item of daysInMonthArr" [ngClass]="item.dayDates.isWeekend ? 'booking-item-header-weekend' : 'booking-item-header'">
+              <div style="display:flex;justify-content:center;margin:0 auto;">
+                {{ item.weekDay }}{{ item.name }}
+            </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of reservationView; let r = index">
-            <td [attr.colspan] = "row.colspan[c]" *ngFor="let item of row.monthDays; let c = index" class="booking-selectable-item"
-              [ngClass]="selectedDateArr[r][c] || checkReservation(row.room.roomNumber, row.days[c])  ? 'booking-selectable-item-selected':''"
+          <tr *ngFor="let row of reservationView |filter:searchText|sort:direction:column:type; let r = index">
+            <td style="position:sticky;left:0;min-width:120px;">
+              {{row.room.roomNumber}}
+            </td>
+            <td style="min-width:100px;">
+              {{row.room.roomCapacity.capacity}}
+            </td>
+            <td >
+              {{row.room.status}}
+            </td>
+            <td *ngFor="let item of row.dayDates; let c = index" class="booking-selectable-item"
+              [ngClass]="(selectedDateArr[r][c] || checkReservation1(row.room.roomNumber, item)) && !row.reservationStartSaved[c] && !row.reservationSaved[c]  ? 'booking-selectable-item-selected': row.reservationStartSaved[c] && !row.reservationSaved[c] ? 'booking-selectable-item-selected-left' : row.reservationSaved[c] && !row.reservationStartSaved[c] ? 'booking-selectable-item-selected-right' : checkReservation1(row.room.roomNumber, item) && row.reservationStartSaved[c] && row.reservationSaved[c] ? 'booking-selectable-item-selected-leftright' : ''"
               style="color:transparent;"
-              (mousedown) = "onMouseArrDown(row.dayDates, r, c)"
-              (mouseover) = "onMouseArrOver(r, c)"
-              (mouseup)="openModalAndSelectRangeBoxForRoomArr(row, row.dayDates, r, c)">
-              <span *ngIf="row.reservationSaved[c]" (click) = "deleteReservation(row, row.days[c], r)" class="close">&times;</span>
-                <!--{{ item.weekDay }}{{ item.name }}-->
-                 {{item}} {{row.days[c]}}
+              (mousedown) = "onMouseArrDown(r, c, item, row.room.roomNumber)"
+              (mouseover) = "onMouseArrOver(r, c, item, row.room.roomNumber)"
+              (mouseup)="openModalAndSelectRangeBoxForRoomArr(row, row.dayDates, r, c, item)">
+              <span *ngIf="row.reservationSaved[c]" (click) = "deleteReservation(row, item, r)" class="close">&times;</span>
+                <div *ngIf="row.reservationSaved[c] || row.reservationStartSaved[c] || row.reservationName[c]; else other_content" style="font-size:9px; color:white;">
+                  <div *ngIf="row.reservationSaved[c] || row.reservationStartSaved[c]" style="display:inline-block;font-size:10px; color:white;">
+                    {{item.toISODate()}}
+                  </div>
+                  <div *ngIf="row.reservationName[c]" style="display:inline-block;font-size:9px; color:white;line-height: 15px;">
+                    {{row.reservationName[c]}}
+                  </div>
+                 </div>
+                  <ng-template  #other_content>{{item.weekdayShort}}{{item.day}}</ng-template>
              </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
-</div>

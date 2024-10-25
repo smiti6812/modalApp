@@ -1,4 +1,20 @@
 
+
+.booking-modal-header {
+  padding: 2px 16px;
+  background-color: cadetblue;
+  color: white;
+  font-size: 38px;
+  min-height: 80px;
+  border-radius: 15px;
+}
+.booking-modal-footer {
+  padding: 2px 16px;
+  background-color: cadetblue;
+  color: white;
+  min-height:80px;
+  border-radius: 15px;
+}
 .cursor {
   cursor: pointer;
 }
@@ -17,6 +33,7 @@
 
 /* Modal Content/Box */
 .booking-modal-content {
+  border-radius: 10px;
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -27,7 +44,7 @@
 
 /* The Close Button */
 .booking-close {
-  color: #aaa;
+  color: white;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -50,10 +67,10 @@
 .booking-selectable-item {
   cursor: pointer;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #aaa;
   margin: 2px;
-  min-width:80px;
-  min-height:60px;
+  min-width:100px;
+  min-height:70px;
   background-color: lightgreen;
 }
 
@@ -62,13 +79,79 @@
   padding: 8px;
   border: 1px solid #ccc;
   margin: 2px;
-  min-width:80px;
+  min-width:100px;
   min-height:40px;
+}
+
+
+.booking-item-header-weekend {
+  cursor: pointer;
+  padding: 8px;
+  border: 1px solid #ccc;
+  margin: 2px;
+  min-width:100px;
+  min-height:40px;
+  background-color: #ddd;
 }
 
 .booking-selectable-item-selected {
   background-color: red;
   color: #fff;
   min-width:80px;
-  min-height:60px;
+  min-height:70px;
+  border: 1px solid transparent;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+}
+
+.booking-selectable-item-selected-leftright{
+  background-color: red;
+  color: #fff;
+  min-width:80px;
+  min-height:70px;
+  border: 1px solid transparent;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+  border-left: 3px solid white;
+  border-right: 3px solid white;
+
+}
+
+.booking-selectable-item-selected-left{
+  background-color: red;
+  color: #fff;
+  min-width:80px;
+  min-height:70px;
+  border: 1px solid transparent;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+  border-left: 3px solid white;
+}
+
+.booking-selectable-item-selected-right{
+  background-color: red;
+  color: #fff;
+  min-width:80px;
+  min-height:70px;
+  border: 1px solid transparent;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+  border-right: 3px solid white;
+}
+
+.colSpan .imageSort{
+  display: none;
+  justify-content: cemter;
+  margin: 0 auto;
+  background-color: lightblue;
+  width:50px;
+}
+
+.colSpan:hover .imageSort{
+  display: flex;
+}
+
+.colSpan {
+  top:0;
+  text-align:center;
 }

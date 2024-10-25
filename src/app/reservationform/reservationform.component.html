@@ -1,8 +1,116 @@
 
-
-<form>
-  <div class="form-group">
-    <label> Name:</label>
-    <input type="text" class="form-control" placeholder="Name" />
+<form [formGroup] = "reservationGroup">
+  <hr />
+  <div style="display:block; width:100%; margin:0 auto;">
+  <div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-3">
+      <label class="control-label col-md-2 form-div-label-font">Name: </label> <span style="color:red;">*</span>
+    </div>
+    <div class="col-5">
+      <input type="text" id="name" class="form-control" formControlName="name" placeholder="Name" required
+       />
+      <div *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+              class="alert alert-danger">
+      <div *ngIf="name.hasError('required')">
+        Name is required.
+      </div>
+      </div>
+    </div>
+    <div class="col-2">
+    </div>
   </div>
+  <div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-3">
+      <label class="control-label col-md-2 form-div-label-font">Email: </label> <span style="color:red;">*</span>
+    </div>
+    <div class="col-5">
+      <input type="email" id="email" class="form-control"  formControlName="email" placeholder="Email" required />
+      <div *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+              class="alert alert-danger">
+       Please enter a valid email adress!
+      </div>
+    </div>
+    <div class="col-2">
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-3">
+        <label class="control-label col-md-2 form-div-label-font">Room:</label>
+      </div>
+      <div class="col-5">
+        <input type="text" class="form-control"  formControlName="roomNumber" placeholder="roomNumber" readonly />
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-3">
+        <label class="control-label col-md-2 form-div-label-font">Status:</label>
+      </div>
+      <div class="col-5">
+        <input type="text" class="form-control" formControlName="status" placeholder="status" readonly/>
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-3">
+        <label class="control-label col-md-2 form-div-label-font">Beds:</label>
+      </div>
+      <div class="col-5">
+        <input type="text" class="form-control"  formControlName="capacity" placeholder="capacity" readonly />
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-3">
+        <label class="control-label col-md-4 form-div-label-font">Start Date:</label>
+      </div>
+      <div class="col-5">
+        <input type="text" class="form-control"  formControlName="startDate" placeholder="Start Date" readonly />
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-3">
+        <label class="control-label col-md-4 form-div-label-font">End Date:</label>
+      </div>
+      <div class="col-5">
+        <input type="text" class="form-control"  formControlName="endDate" placeholder="End Date"  readonly/>
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-1">
+        <button type="submit" (click) ="cancelForm()" class="btn btn-secondary">Cancel</button>
+      </div>
+      <div class="col-2">
+        <button type="submit" [disabled]="!reservationGroup.valid" (click)="submitForm()"  class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+    <hr />
 </form>
+
+<!--[disabled]="!reservationGroup.valid"-->
+

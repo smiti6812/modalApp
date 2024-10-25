@@ -6,6 +6,7 @@ export interface Reservation{
   startDate: DateTime,
   endDate: DateTime,
   name: string,
+  email: string,
   payed: boolean
   days: any []
 }
