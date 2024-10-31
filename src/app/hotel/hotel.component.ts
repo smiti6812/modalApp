@@ -66,7 +66,6 @@ export class HotelComponent {
   }
 
   getReservationForm(form: ReservationForm){
-
     let res: Reservation = <Reservation> {
       reservedRoom: form.view.room,
       name: form.name,
@@ -108,7 +107,6 @@ export class HotelComponent {
     }
 
     onMouseArrOver(row: number, col: number, date: DateTime, roomNumber: string){
-      console.log('mouseover: ' + this.start)
       if (this.start > -1 && !this.checkReservation1(roomNumber, date)){
 
           if ( this.selectedRow === row){
@@ -134,11 +132,6 @@ export class HotelComponent {
     }
 
     openModalAndSelectRangeBoxForRoomArr(view: ReservationView, item: any, row: number, col: number, date: DateTime){
-      console.log('open modal: ' + this.start)
-      console.log('open modal checkReservation: ' + this.checkReservation1(view.room.roomNumber, date))
-      console.log('open modal selectedRow: ' + this.selectedRow)
-      console.log('open modal row: ' + row)
-      console.log('open modal col: ' + col + 1)
       if (this.start > -1 && this.selectedRow === row &&  !this.checkReservationInRange(row, this.start, col + 1)){
           for(let i = this.start; i <= col; i++){
               if (!this.selected.find(val => val === item[i])){
@@ -150,7 +143,6 @@ export class HotelComponent {
           view.reservationSaved[col] = true;
           view.reservationStartSaved[this.start -1] = true;
           if (this.selected[0]){
-            //this.showModal = true;
             this.reservationForm.name = '';
             this.reservationForm = {} as ReservationForm;
             this.reservationForm.roomNumber = view.room.roomNumber;
