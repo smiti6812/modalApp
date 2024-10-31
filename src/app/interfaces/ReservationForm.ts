@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { ReservationView } from "./ReservationView";
 
 export interface ReservationForm{
   name: string,
@@ -7,5 +8,6 @@ export interface ReservationForm{
   capacity: number,
   status: string,
   startDate: DateTime,
-  endDate: DateTime
+  endDate: DateTime,
+  view: ReservationView
 }

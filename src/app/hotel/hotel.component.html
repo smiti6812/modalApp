@@ -69,7 +69,8 @@
               {{row.room.status}}
             </td>
             <td *ngFor="let item of row.dayDates; let c = index" class="booking-selectable-item"
-              [ngClass]="(selectedDateArr[r][c] || checkReservation1(row.room.roomNumber, item)) && !row.reservationStartSaved[c] && !row.reservationSaved[c]  ? 'booking-selectable-item-selected': row.reservationStartSaved[c] && !row.reservationSaved[c] ? 'booking-selectable-item-selected-left' : row.reservationSaved[c] && !row.reservationStartSaved[c] ? 'booking-selectable-item-selected-right' : checkReservation1(row.room.roomNumber, item) && row.reservationStartSaved[c] && row.reservationSaved[c] ? 'booking-selectable-item-selected-leftright' : ''"
+              [ngClass]="(selectedDateArr[r][c] || checkReservation1(row.room.roomNumber, item)) && !row.reservationStartSaved[c] && !row.reservationSaved[c]  ? 'booking-selectable-item-selected': row.reservationStartSaved[c] && !row.reservationSaved[c] ? 'booking-selectable-item-selected-left' : row.reservationSaved[c] && !row.reservationStartSaved[c] ? 'booking-selectable-item-selected-right' : checkReservation1(row.room.roomNumber, item) && row.reservationStartSaved[c] && row.reservationSaved[c] ? 'booking-selectable-item-selected-leftright' :
+              (item.day % item.daysInMonth === 0) && item.day > 1 && c < row.dayDates.length - 1? 'booking-selectable-item-monthend' : ''"
               style="color:transparent;"
               (mousedown) = "onMouseArrDown(r, c, item, row.room.roomNumber)"
               (mouseover) = "onMouseArrOver(r, c, item, row.room.roomNumber)"

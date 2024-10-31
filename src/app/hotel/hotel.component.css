@@ -74,6 +74,18 @@
   background-color: lightgreen;
 }
 
+.booking-selectable-item-monthend {
+  cursor: pointer;
+  padding: 8px;
+  border: 1px solid #aaa;
+  margin: 2px;
+  min-width:100px;
+  min-height:70px;
+  background-color: lightgreen;
+  border-right: 3px solid red;
+}
+
+
 .booking-item-header {
   cursor: pointer;
   padding: 8px;

@@ -1,4 +1,4 @@
-import { Component, Input, Inject,NgModule, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Inject, NgModule, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import {FormControl, FormGroup, ReactiveFormsModule, FormsModule, Validators} from '@angular/forms';
 import { ReservationForm } from '../interfaces/ReservationForm';
@@ -12,7 +12,7 @@ import { DateTime, Info, Interval} from 'luxon';
   styleUrl: './reservationform.component.css'
 })
 export class ReservationformComponent implements OnInit {
-  @Input()reservationForm: ReservationForm;
+  @Input() reservationForm: ReservationForm;
   @Output() submitReservationForm = new EventEmitter<ReservationForm>();
   @Output() cancelReservationForm = new EventEmitter();
  reservationGroup: FormGroup;

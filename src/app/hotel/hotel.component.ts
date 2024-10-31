@@ -60,11 +60,33 @@ export class HotelComponent {
   }
   cancelForm(e: any){
     this.showModal = false;
+    this.start = -1;
+    this.end = -1;
+    this.selectedRow = -1;
   }
 
   getReservationForm(form: ReservationForm){
-    alert(form.name);
+
+    let res: Reservation = <Reservation> {
+      reservedRoom: form.view.room,
+      name: form.name,
+      email: form.email,
+      startDate: form.startDate,
+      endDate: form.endDate
+    };
+
+    if ( this.selected.length > 1){
+      form.view.reservationName[this.start] = res.name;
+    }
+    else{
+      form.view.reservationName[this.start - 1] = res.name;
+    }
+    this.res = res;
+    this.reservations.push(res);
     this.showModal = false;
+    this.start = -1;
+    this.end = -1;
+    this.selectedRow = -1;
   }
 
   setSortParams(param: any){
@@ -136,45 +158,12 @@ export class HotelComponent {
             this.reservationForm.status = view.room.status;
             this.reservationForm.startDate = this.selected[0];
             this.reservationForm.endDate = this.selected[this.selected.length -1];
-
-            let res: Reservation = <Reservation> {
-              reservedRoom: view.room,
-              name: 'gipsz jakab'+(this.reservations.length -1),
-              startDate: this.selected[0],
-              endDate: this.selected[this.selected.length -1]
-            };
-
-            if ( this.selected.length > 1){
-              view.reservationName[this.start] = res.name;
-            }
-            else{
-              view.reservationName[this.start - 1] = res.name;
-            }
-            const diff = DateTime.local(res.endDate.year, res.endDate.month, res.endDate.day).
-            diff(DateTime.local(res.startDate.year, res.startDate.month, res.startDate.day), 'days').days + 1;
-
-            res.days = [];
-            let occupied: boolean = false;
-            for(let i = 0; i < this.selected.length; i++){
-              if (!this.checkReservation1(view.room.roomNumber, this.selected[i])){
-                res.days.push(this.selected[i].day);
-              }
-              else{
-                occupied = true;
-                return;
-              }
-          }
-          if (!occupied){
-            this.res = res;
-            this.reservations.push(res);
+            this.reservationForm.view = view;
             this.showModal = true;
-          }
+            //const diff = DateTime.local(res.endDate.year, res.endDate.month, res.endDate.day).
+            //diff(DateTime.local(res.startDate.year, res.startDate.month, res.startDate.day), 'days').days + 1;
         }
       }
-
-      this.start = -1;
-      this.end = -1;
-      this.selectedRow = -1;
     }
 
     updateReservedSavedFromReservation(){
