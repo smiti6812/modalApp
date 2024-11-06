@@ -22,7 +22,7 @@
                 Available Rooms:
               </div>
               <div>
-                <input class="form-control" style="max-width: 400px;"  type="text" [(ngModel)]="searchText"  placeholder="Search.." >
+                <input class="form-control" style="max-width: 400px;"  type="text" [(ngModel)]="searchText" #search  placeholder="Search.." >
               </div>
             </th>
             <th [attr.colspan]="days" *ngFor="let days of reservationMonths;let i = index">

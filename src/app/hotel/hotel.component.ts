@@ -1,4 +1,4 @@
-import { Component, Input, Inject, NgModule  } from '@angular/core';
+import { Component, Input, Inject, NgModule, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { ReservationView } from '../interfaces/ReservationView';
 import { Reservation } from '../interfaces/Reservation';
@@ -20,6 +20,7 @@ import { ReservationForm } from '../interfaces/ReservationForm';
 })
 
 export class HotelComponent {
+  @ViewChild('search') searchElement: ElementRef;
   @Input() reservationView!: ReservationView[];
   @Input() daysInMonthArr!: any [];
   @Input() selectedDateArr!: boolean  [][];
@@ -27,10 +28,10 @@ export class HotelComponent {
   @Input() reservationStartSaved!: boolean [][];
   @Input() reservations!: Reservation [];
   @Input() reservationMonths: number [];
-  start: number = -1;
-  end: number = -1;
-  selectedRow: number = -1;
-  selected: any[] = [];
+  @Input() selected: any[] = [];
+  @Input() selectedRow: number = -1;
+  @Input() start: number = -1;
+  @Input() end: number = -1;
   showModal: boolean = false;
   months: number = 3;
   pageSelectedDate:DateTime = DateTime.now();
@@ -58,11 +59,21 @@ export class HotelComponent {
     this.clearSelectedDateArr();
     this.updateReservedSavedFromReservation();
   }
+
+  focusSearch(){
+    setTimeout(()=>{
+      this.searchElement.nativeElement.focus();
+    },0);
+  }
   cancelForm(e: any){
     this.showModal = false;
     this.start = -1;
     this.end = -1;
     this.selectedRow = -1;
+    this.selected = [];
+    this.clearSelectedDateArr();
+    this.updateReservedSavedFromReservation();
+    this.focusSearch();
   }
 
   getReservationForm(form: ReservationForm){
@@ -73,7 +84,16 @@ export class HotelComponent {
       startDate: form.startDate,
       endDate: form.endDate
     };
+    for(let i = this.start; i <= this.end; i++){
+      if (!this.selected.find(val => val === form.view.dayDates[i])){
+        this.selected.push(form.view.dayDates[i]);
+      }
+      let row = this.reservationView.indexOf(form.view);
+      this.selectedDateArr[row][i]= true;
+    }
 
+    form.view.reservationSaved[this.end] = true;
+    form.view.reservationStartSaved[this.start -1] = true;
     if ( this.selected.length > 1){
       form.view.reservationName[this.start] = res.name;
     }
@@ -107,8 +127,10 @@ export class HotelComponent {
     }
 
     onMouseArrOver(row: number, col: number, date: DateTime, roomNumber: string){
+      console.log('checkReservation:'+this.checkReservation1(roomNumber, date));
       if (this.start > -1 && !this.checkReservation1(roomNumber, date)){
-
+        console.log('start:' + this.start)
+        console.log('selectedRow:' + this.selectedRow)
           if ( this.selectedRow === row){
             for(let i = this.start; i <= col; i++){
                 this.selectedDateArr[row][col]= true;
@@ -133,23 +155,15 @@ export class HotelComponent {
 
     openModalAndSelectRangeBoxForRoomArr(view: ReservationView, item: any, row: number, col: number, date: DateTime){
       if (this.start > -1 && this.selectedRow === row &&  !this.checkReservationInRange(row, this.start, col + 1)){
-          for(let i = this.start; i <= col; i++){
-              if (!this.selected.find(val => val === item[i])){
-                  this.selected.push(item[i]);
-              }
-              this.selectedDateArr[row][i]= true;
-          }
-
-          view.reservationSaved[col] = true;
-          view.reservationStartSaved[this.start -1] = true;
-          if (this.selected[0]){
+          this.end = col;
+          if (item[this.start -1]){
             this.reservationForm.name = '';
             this.reservationForm = {} as ReservationForm;
             this.reservationForm.roomNumber = view.room.roomNumber;
             this.reservationForm.capacity = view.room.roomCapacity.capacity;
             this.reservationForm.status = view.room.status;
-            this.reservationForm.startDate = this.selected[0];
-            this.reservationForm.endDate = this.selected[this.selected.length -1];
+            this.reservationForm.startDate = item[this.start -1];
+            this.reservationForm.endDate = item[col];
             this.reservationForm.view = view;
             this.showModal = true;
             //const diff = DateTime.local(res.endDate.year, res.endDate.month, res.endDate.day).
