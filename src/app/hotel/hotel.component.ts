@@ -127,10 +127,7 @@ export class HotelComponent {
     }
 
     onMouseArrOver(row: number, col: number, date: DateTime, roomNumber: string){
-      console.log('checkReservation:'+this.checkReservation1(roomNumber, date));
       if (this.start > -1 && !this.checkReservation1(roomNumber, date)){
-        console.log('start:' + this.start)
-        console.log('selectedRow:' + this.selectedRow)
           if ( this.selectedRow === row){
             for(let i = this.start; i <= col; i++){
                 this.selectedDateArr[row][col]= true;
@@ -154,21 +151,23 @@ export class HotelComponent {
     }
 
     openModalAndSelectRangeBoxForRoomArr(view: ReservationView, item: any, row: number, col: number, date: DateTime){
-      if (this.start > -1 && this.selectedRow === row &&  !this.checkReservationInRange(row, this.start, col + 1)){
+      if (this.start > -1 && this.selectedRow === row &&  !this.checkReservationInRange(row, this.start, col + 1, item)){
           this.end = col;
-          if (item[this.start -1]){
-            this.reservationForm.name = '';
-            this.reservationForm = {} as ReservationForm;
-            this.reservationForm.roomNumber = view.room.roomNumber;
-            this.reservationForm.capacity = view.room.roomCapacity.capacity;
-            this.reservationForm.status = view.room.status;
-            this.reservationForm.startDate = item[this.start -1];
-            this.reservationForm.endDate = item[col];
-            this.reservationForm.view = view;
-            this.showModal = true;
-            //const diff = DateTime.local(res.endDate.year, res.endDate.month, res.endDate.day).
-            //diff(DateTime.local(res.startDate.year, res.startDate.month, res.startDate.day), 'days').days + 1;
-        }
+          this.reservationForm.name = '';
+          this.reservationForm = {} as ReservationForm;
+          this.reservationForm.roomNumber = view.room.roomNumber;
+          this.reservationForm.capacity = view.room.roomCapacity.capacity;
+          this.reservationForm.status = view.room.status;
+          this.reservationForm.startDate = item[this.start -1];
+          this.reservationForm.endDate = item[col];
+          this.reservationForm.view = view;
+          this.showModal = true;
+          //const diff = DateTime.local(res.endDate.year, res.endDate.month, res.endDate.day).
+          //diff(DateTime.local(res.startDate.year, res.startDate.month, res.startDate.day), 'days').days + 1;
+
+      }
+      else{
+        this.focusSearch();
       }
     }
 
@@ -204,9 +203,9 @@ export class HotelComponent {
       }
     }
 
-    checkReservationInRange(row: number,start: number, end: number):boolean{
+    checkReservationInRange(row: number,start: number, end: number, dates: any[]):boolean{
       for(let j = start; j <= end; j++ ){
-        if (this.checkReservation(this.reservationView[row].room.roomNumber, j)){
+        if (this.checkReservation1(this.reservationView[row].room.roomNumber, dates[j - 1])){
           return true;
         }
       } date: DateTime
@@ -252,7 +251,7 @@ export class HotelComponent {
       }
       view.reservationSaved[res.endDate.day - 1] = false;
       view.reservationStartSaved[res.startDate.day -1] = false;
-      if (res.days.length > 1){
+      if (res.days && res.days.length > 1){
         view.reservationName[res.startDate.day] = '';
       }
       else{
